@@ -1,0 +1,57 @@
+---
+- name: 禁用selinux
+  become: yes
+  selinux: 
+    state: disabled
+
+- name: 禁用swap
+  become: yes
+  mount:
+    path: swap
+    state: absent
+    backup: yes
+
+- name: 修改端口转发等内核配置
+  become: yes
+  copy:
+    src: /Users/chris/ansible/res/config/k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+
+- name: 应用内核配置
+  become: yes
+  shell: modprobe br_netfilter && sysctl -p /etc/sysctl.d/k8s.conf
+
+- name: 配置docker,改为systemd
+  become: yes
+  lineinfile:
+    dest: "/etc/docker/daemon.json"
+    regexp: "^{"
+    line: "{\n\ \ \ \ \ \ \ \ \"exec-opts\": [\"native.cgroupdriver=systemd\"],"
+
+- name: 重启docker
+  become: yes
+  systemd:
+    name: docker
+    state: restarted
+
+- name: 复制kubeadm/kubectl/kubelet安装包
+  copy:
+    src: /Users/chris/ansible/res/k8s-rpm-v1.14.3-0
+    dest: "/tmp"
+
+- name: 安装kubeadm/kubectl/kubelet
+  become: yes
+  yum:
+    name: /tmp/k8s-rpm-v1.14.3-0
+    state: present
+
+- name: 启用kubelet服务，并设置为系统服务
+  become: yes
+  systemd:
+    name: kubelet
+    state: started
+    enabled: yes
+
+# - name: 重启
+#   become: yes
+#   reboot:

@@ -1,0 +1,54 @@
+---
+- name: 复制docker安装文件
+  copy:
+    src: /Users/chris/ansible/res/docker-18.09.6
+    dest: "/tmp"
+
+- name: 获取docker安装文件路径
+  find:
+    paths: /tmp/docker-18.09.6
+    patterns: "*.rpm"
+  register: fs
+
+- name: 取所有文件
+  set_fact:
+    rpm_path: "{{item.path}}"
+  with_items: "{{fs.files}}"
+  register: fp
+
+- name: 取所有文件path属性
+  set_fact:
+      rpm_list: "{{ fp.results | map(attribute='ansible_facts.rpm_path') | list }}"
+
+- name: 安装docker
+  become: yes
+  yum:
+    name: "{{rpm_list}}"
+    state: present
+
+- name: 创建docker配置文件夹
+  become: yes
+  file:
+    path: /etc/docker/
+    state: directory
+
+- name: 添加docker配置
+  become: yes
+  copy:
+    src: /Users/chris/ansible/res/config/daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: 添加当前用户到docker组
+  become: yes
+  user:
+    name: "{{ansible_user_id}}"
+    groups: docker
+    append: true
+  register: result
+
+- name: 启动docker，并设置为系统服务
+  become: yes
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

@@ -1,0 +1,6 @@
+---
+- name: 安装vim/telnet/wget/unzip/epel
+  become: yes
+  yum:
+    name: vim,telnet,wget,unzip,epel-release
+    state: installed

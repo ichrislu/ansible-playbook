@@ -1,0 +1,13 @@
+- hosts: test
+  tasks:
+    - include_tasks: init-centos.yml
+    - include_tasks: install-docker.yml
+    - include_tasks: init-k8s-base.yml
+    
+    - block:
+      - include_tasks: install-k8s-master.yml
+      when: group_names == ['master']
+
+    - block:
+      - include_tasks: install-k8s-worker.yml
+      when: group_names == ['worker']
