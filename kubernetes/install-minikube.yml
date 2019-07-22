@@ -24,7 +24,7 @@
     state=enabled
 
 - name: 复制镜像包
-  copy:
+  synchronize:
     src: /Users/chris/ansible/res/minikube-v1.2.0/images
     dest: "/tmp"
 
@@ -41,6 +41,12 @@
     - "{{rs.files}}"
 
 - name: 复制kubectl和minikube
-  copy:
-    src: /Users/chris/ansible/res/minikube-v1.2.0/bin
-    dest: "/usr/local/bin/"
+  become: yes
+  synchronize:
+    src: /Users/chris/ansible/res/minikube-v1.2.0/bin/*
+    dest: "/usr/local/bin"
+
+- name: 配置执行权限
+  file:
+    path: "/usr/local/bin/"
+    mode: a+x
