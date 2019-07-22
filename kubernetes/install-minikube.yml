@@ -1,0 +1,46 @@
+---
+
+- name: 禁用swap
+  become: yes
+  mount:
+    path: swap
+    state: absent
+    backup: yes
+
+- name: 开放端口：Kubelet API
+  become: yes
+  firewalld:
+    zone=public
+    port=10250/tcp
+    permanent=true
+    state=enabled
+
+- name: 开放端口：dashboard
+  become: yes
+  firewalld:
+    zone=public
+    port=8443/tcp
+    permanent=true
+    state=enabled
+
+- name: 复制镜像包
+  copy:
+    src: /Users/chris/ansible/res/minikube-v1.2.0/images
+    dest: "/tmp"
+
+- name: 获取所有tar镜像文件路径
+  find:
+    paths: /tmp/images
+    patterns: "*.tar"
+  register: rs
+
+- name: 导入镜像
+  become: yes
+  shell: "docker load < {{item.path}}"
+  with_items:
+    - "{{rs.files}}"
+
+- name: 复制kubectl和minikube
+  copy:
+    src: /Users/chris/ansible/res/minikube-v1.2.0/bin
+    dest: "/usr/local/bin/"
