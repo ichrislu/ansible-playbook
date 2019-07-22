@@ -1,6 +1,6 @@
 ---
-- name: 安装vim/telnet/wget/unzip/epel
+- name: 安装vim/telnet/wget/unzip/epel/rsync
   become: yes
   yum:
-    name: vim,telnet,wget,unzip,epel-release
+    name: vim,telnet,wget,unzip,epel-release,rsync
     state: installed

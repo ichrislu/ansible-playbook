@@ -43,8 +43,8 @@
 - name: 复制kubectl和minikube
   become: yes
   synchronize:
-    src: /Users/chris/ansible/res/minikube-v1.2.0/bin/*
-    dest: "/usr/local/bin"
+    src: /Users/chris/ansible/res/minikube-v1.2.0/bin/
+    dest: "/usr/local/bin/"
 
 - name: 配置执行权限
   file:
