@@ -24,7 +24,7 @@
     state=enabled
 
 - name: 复制镜像包
-  synchronize:
+  copy:
     src: /Users/chris/ansible/res/minikube-v1.2.0/images
     dest: "/tmp"
 
@@ -42,7 +42,7 @@
 
 - name: 复制kubectl和minikube
   become: yes
-  synchronize:
+  copy:
     src: /Users/chris/ansible/res/minikube-v1.2.0/bin/
     dest: "/usr/local/bin/"
 

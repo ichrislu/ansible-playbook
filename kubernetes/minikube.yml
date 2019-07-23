@@ -1,5 +1,6 @@
 - hosts: test
   tasks:
-    - include_tasks: init-centos.yml
-    - include_tasks: install-docker.yml
-    - include_tasks: install-minikube.yml
+    - include_tasks: test.yml
+    # - include_tasks: init-centos.yml
+    # - include_tasks: install-docker.yml
+    # - include_tasks: install-minikube.yml

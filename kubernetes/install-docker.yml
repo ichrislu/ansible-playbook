@@ -1,6 +1,6 @@
 ---
 - name: 复制docker安装文件
-  synchronize:
+  copy:
     src: /Users/chris/ansible/res/docker-18.09.6
     dest: "/tmp"
 
