@@ -1,0 +1,18 @@
+src	到文件夹，以"/"结尾
+dest	到新文件夹，会自动创建，以"/"结尾
+
+---all
+docker安装文件路径		docker-rpms
+docker配置文件		docker-config
+
+---minikube
+镜像包			minikube-images
+kubectl / minikube		kubectl / minikube
+
+--kubeadm
+k8s配置			k8s-config
+kubeadm / kubectl / kubelet	kubeadm / kubectl / kubelet
+	---master		
+	镜像包		k8s-master-images
+	---worker		
+	镜像包		k8s-worker-images
