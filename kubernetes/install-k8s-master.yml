@@ -25,12 +25,12 @@
 
 - name: 复制镜像包
   copy:
-    src: /Users/chris/ansible/res/k8s-image-v1.14.0/master
-    dest: "/tmp"
+    src: {{k8s-master-images}}
+    dest: "/tmp/k8s-master-images/"
 
 - name: 获取所有tar镜像文件路径
   find:
-    paths: /tmp/master
+    paths: "/tmp/k8s-master-images/"
     patterns: "*.tar"
   register: rs
 

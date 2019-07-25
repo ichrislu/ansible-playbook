@@ -14,7 +14,7 @@
 - name: 修改端口转发等内核配置
   become: yes
   copy:
-    src: /Users/chris/ansible/res/config/k8s.conf
+    src: {{k8s-config}}
     dest: /etc/sysctl.d/k8s.conf
 
 - name: 应用内核配置
@@ -36,13 +36,13 @@
 
 - name: 复制kubeadm/kubectl/kubelet安装包
   copy:
-    src: /Users/chris/ansible/res/k8s-rpm-v1.14.3-0
-    dest: "/tmp"
+    src: {{k8s-rpms}}
+    dest: "/tmp/k8s-rpms/"
 
 - name: 安装kubeadm/kubectl/kubelet
   become: yes
   yum:
-    name: /tmp/k8s-rpm-v1.14.3-0
+    name: "/tmp/k8s-rpms/"
     state: present
 
 - name: 启用kubelet服务，并设置为系统服务

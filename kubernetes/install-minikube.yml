@@ -25,12 +25,12 @@
 
 - name: 复制镜像包
   copy:
-    src: /Users/chris/ansible/res/minikube-v1.2.0/images
-    dest: "/tmp"
+    src: {{minikube-images}}
+    dest: "/tmp/minikube-images/"
 
 - name: 获取所有tar镜像文件路径
   find:
-    paths: /tmp/images
+    paths: "/tmp/minikube-images/"
     patterns: "*.tar"
   register: rs
 
@@ -43,10 +43,18 @@
 - name: 复制kubectl和minikube
   become: yes
   copy:
-    src: /Users/chris/ansible/res/minikube-v1.2.0/bin/
+    src: {{minikube-bin}}
     dest: "/usr/local/bin/"
 
 - name: 配置执行权限
   file:
     path: "/usr/local/bin/"
     mode: a+x
+
+- name: 启动集群
+  become: yes
+  shell: "http_proxy={{http-proxy}} sudo -E /usr/local/bin/minikube start --vm-driver=none"
+  environment:
+    CHANGE_MINIKUBE_NONE_USER: 'true'
+    MINIKUBE_HOME: '$HOME'
+    KUBECONFIG: '$HOME/.kube/config'

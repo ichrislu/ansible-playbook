@@ -1,12 +1,12 @@
 ---
 - name: 复制docker安装文件
   copy:
-    src: /Users/chris/ansible/res/docker-18.09.6
-    dest: "/tmp"
+    src: {{docker-rpms}}
+    dest: "/tmp/docker-rpms/"
 
 - name: 获取docker安装文件路径
   find:
-    paths: /tmp/docker-18.09.6
+    paths: "/tmp/docker-rpms/"
     patterns: "*.rpm"
   register: fs
 
@@ -35,7 +35,7 @@
 - name: 添加docker配置
   become: yes
   copy:
-    src: /Users/chris/ansible/res/config/daemon.json
+    src: {{docker-config}}
     dest: /etc/docker/daemon.json
 
 - name: 添加当前用户到docker组
