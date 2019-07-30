@@ -1,14 +1,22 @@
 ---
 
-- name: 复制docker安装文件
-  copy:
-    src: "/home/chris/ansible-playbook/kubernetes/temp/"
-    dest: "/tmp/k8s-images/"
+# - name: 复制docker安装文件
+#   copy:
+#     src: "/home/chris/ansible-playbook/kubernetes/temp/"
+#     dest: "/tmp/k8s-images/"
 
-    #- name: minikube start
-    #  become: 'true'
-    #  shell: 'http_proxy=192.168.1.10:1087 sudo -E /usr/local/bin/minikube start --vm-driver=none'
-    #  environment:
-    #    CHANGE_MINIKUBE_NONE_USER: 'true'
-    #    MINIKUBE_HOME: '$HOME'
-    #    KUBECONFIG: '$HOME/.kube/config'
+# - name: minikube start
+#     become: 'true'
+#     shell: 'http_proxy=192.168.1.10:1087 sudo -E /usr/local/bin/minikube start --vm-driver=none'
+#     environment:
+#     CHANGE_MINIKUBE_NONE_USER: 'true'
+#     MINIKUBE_HOME: '$HOME'
+#     KUBECONFIG: '$HOME/.kube/config'
+
+- name: 启动集群
+#   become: yes
+  shell: "http_proxy={{http-proxy}} sudo -E /usr/local/bin/minikube start --vm-driver=none"
+  environment:
+    CHANGE_MINIKUBE_NONE_USER: 'true'
+    MINIKUBE_HOME: '$HOME'
+    KUBECONFIG: '$HOME/.kube/config'
