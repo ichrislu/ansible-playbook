@@ -17,7 +17,7 @@
 
 - name: 复制镜像包
   copy:
-    src: {{k8s-worker-images}}
+    src: "{{k8s_worker_images}}"
     dest: "/tmp/k8s-worker-images/"
 
 - name: 获取所有tar镜像文件路径

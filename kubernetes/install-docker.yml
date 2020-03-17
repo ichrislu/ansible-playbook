@@ -1,7 +1,7 @@
 ---
 - name: 复制docker安装文件
   copy:
-    src: {{docker-rpms}}
+    src: "{{docker_rpms}}"
     dest: "/tmp/docker-rpms/"
 
 - name: 获取docker安装文件路径
@@ -35,7 +35,7 @@
 - name: 添加docker配置
   become: yes
   copy:
-    src: {{docker-config}}
+    src: "{{docker_config}}"
     dest: /etc/docker/daemon.json
 
 - name: 添加当前用户到docker组

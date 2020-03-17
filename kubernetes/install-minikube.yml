@@ -1,5 +1,4 @@
 ---
-
 - name: 禁用swap
   become: yes
   mount:
@@ -25,7 +24,7 @@
 
 - name: 复制镜像包
   copy:
-    src: {{minikube-images}}
+    src: "{{minikube_images}}"
     dest: "/tmp/minikube-images/"
 
 - name: 获取所有tar镜像文件路径
@@ -43,18 +42,40 @@
 - name: 复制kubectl和minikube
   become: yes
   copy:
-    src: {{minikube-bin}}
+    src: "{{minikube_bin}}"
     dest: "/usr/local/bin/"
-
-- name: 配置执行权限
-  file:
-    path: "/usr/local/bin/"
     mode: a+x
 
-- name: 启动集群
+- name: 复制VirtualBox安装文件
+  copy:
+    src: "{{virtual_box_rpms}}"
+    dest: "/tmp/virtual-box-rpms/"
+
+- name: 获取VirtualBox安装文件路径
+  find:
+    paths: "/tmp/virtual-box-rpms/"
+    patterns: "*.rpm"
+  register: fs
+
+- name: 取所有文件
+  set_fact:
+    rpm_path: "{{item.path}}"
+  with_items: "{{fs.files}}"
+  register: fp
+
+- name: 取所有文件path属性
+  set_fact:
+      rpm_list: "{{ fp.results | map(attribute='ansible_facts.rpm_path') | list }}"
+
+- name: 安装VirtualBox
   become: yes
-  shell: "http_proxy={{http-proxy}} sudo -E /usr/local/bin/minikube start --vm-driver=none"
-  environment:
-    CHANGE_MINIKUBE_NONE_USER: 'true'
-    MINIKUBE_HOME: '$HOME'
-    KUBECONFIG: '$HOME/.kube/config'
+  yum:
+    name: "{{rpm_list}}"
+    state: present
+
+#- name: 启动集群
+#  shell: "minikube start"
+#  environment:
+#    CHANGE_MINIKUBE_NONE_USER: 'true'
+#    MINIKUBE_HOME: '$HOME'
+#    KUBECONFIG: '$HOME/.kube/config'
