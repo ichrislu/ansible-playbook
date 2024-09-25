@@ -3,8 +3,7 @@
 - kubeadm安装
 
 ## TODO
-
-[ ] crontab添加删除过时/过期的image和容器
+- [ ] crontab添加删除过时/过期的image和容器
 
 - docker：`15 1 * * * docker image prune -f`
 - containerd：`10 0 * * * crictl rmi --prune`
